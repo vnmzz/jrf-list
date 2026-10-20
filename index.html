@@ -337,7 +337,10 @@
         }
       }
     </style>
-    <script src="data.js"></script>
+    <!-- Timestamp stops browsers reusing an old cached copy of the list after an update -->
+    <script>
+      document.write('<script src="data.js?t=' + Date.now() + '"><\/script>');
+    </script>
     <script src="script.js?v=1.36"></script>
   </head>
 
