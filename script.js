@@ -158,19 +158,12 @@ async function fetchData() {
         const usersWithStatus = await Promise.all(userPromises);
 
 
-        const sortedUsers = usersWithStatus.sort((a, b) => {
-            if (a.status === "Okay" && b.status !== "Okay") return -1;
-            if (a.status !== "Okay" && b.status === "Okay") return 1;
-            if (a.status === "Okay" && b.status === "Okay") return 0;
-
-            const aRemaining = parseHospitalTime(a.status);
-            const bRemaining = parseHospitalTime(b.status);
-
-            if (aRemaining === Infinity && bRemaining !== Infinity) return 1;
-            if (aRemaining !== Infinity && bRemaining === Infinity) return -1;
-
-            return aRemaining - bRemaining;
-        });
+        // Attackable targets first, then hospitalized, then anything else (travelling, jail...).
+        // Within each group, weakest estimated stats first.
+        const statusRank = (s) => s === "Okay" ? 0 : parseHospitalTime(s) !== Infinity ? 1 : 2;
+        const sortedUsers = usersWithStatus.sort((a, b) =>
+            statusRank(a.status) - statusRank(b.status) || parseStats(a.est) - parseStats(b.est)
+        );
 
         sortedUsers.forEach((user, index) => {
             const attackLink = createAttackLink(user.id, user.status);
@@ -221,6 +214,14 @@ function startCountdown() {
       fetchButton.textContent = `FETCH (${remainingTime}s)`;
     }
   }, 1000);
+}
+
+// "7.69k" -> 7690, "1.6b" -> 1600000000. Unknown/blank sorts last.
+function parseStats(est) {
+  const m = String(est || "").trim().match(/^([\d.]+)\s*([kmbt]?)/i);
+  if (!m) return Infinity;
+  const mult = { "": 1, k: 1e3, m: 1e6, b: 1e9, t: 1e12 }[m[2].toLowerCase()];
+  return parseFloat(m[1]) * mult;
 }
 
 function parseHospitalTime(status) {
