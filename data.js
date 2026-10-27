@@ -35,7 +35,6 @@ const LIST_DATA = {
         { "name": "Bob_Cobb", "id": "2038224", "lvl": "26", "est": "360k", "ff": "1.11", "by": "Khabib", "reason": "" },
         { "name": "Cryss", "id": "4074384", "lvl": "47", "est": "673k", "ff": "1.16", "by": "Pzykko", "reason": "" },
         { "name": "Vglost", "id": "4106545", "lvl": "40", "est": "758k", "ff": "1.17", "by": "Ixileto", "reason": "" },
-        { "name": "KizBear", "id": "4209593", "lvl": "51", "est": "1.12m", "ff": "1.20", "by": "RonMcFart", "reason": "Kicked me out of my first faction" },
         { "name": "SUBSPECIES", "id": "3305384", "lvl": "41", "est": "1.21m", "ff": "1.21", "by": "Khabib", "reason": "" },
         { "name": "Skene-dhu", "id": "3743112", "lvl": "67", "est": "3.15m", "ff": "1.34", "by": "RonMcFart", "reason": "Driving down price of VW Bug" },
         { "name": "RT_", "id": "3335602", "lvl": "90", "est": "379m", "ff": "4.70", "by": "Ixileto", "reason": "Mugging and insult" },
