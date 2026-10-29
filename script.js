@@ -158,12 +158,15 @@ async function fetchData() {
         const usersWithStatus = await Promise.all(userPromises);
 
 
-        // Attackable targets first, then hospitalized, then anything else (travelling, jail...).
-        // Within each group, weakest estimated stats first.
+        // Attackable targets first (weakest estimated stats first), then hospitalized
+        // (shortest timer first), then anything else (travelling, jail, federal...) by stats.
         const statusRank = (s) => s === "Okay" ? 0 : parseHospitalTime(s) !== Infinity ? 1 : 2;
-        const sortedUsers = usersWithStatus.sort((a, b) =>
-            statusRank(a.status) - statusRank(b.status) || parseStats(a.est) - parseStats(b.est)
-        );
+        const sortedUsers = usersWithStatus.sort((a, b) => {
+            const rank = statusRank(a.status) - statusRank(b.status);
+            if (rank !== 0) return rank;
+            if (statusRank(a.status) === 1) return parseHospitalTime(a.status) - parseHospitalTime(b.status);
+            return parseStats(a.est) - parseStats(b.est);
+        });
 
         sortedUsers.forEach((user, index) => {
             const attackLink = createAttackLink(user.id, user.status);
